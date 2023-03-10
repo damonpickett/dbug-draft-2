@@ -29,7 +29,7 @@ if sys.version_info < (3, 7):
 def get_error_explanation(highlighted_text):
     prompt = f"Explain this error message: {highlighted_text}"
     response = openai.Completion.create(
-        engine="davinci-codex",
+        model="text-davinci-003",
         prompt=prompt,
         max_tokens=1024
     )
