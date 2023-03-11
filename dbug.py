@@ -4,6 +4,7 @@ import openai
 from dotenv import load_dotenv
 import os
 from rich.console import Console
+import re
 
 
 load_dotenv()
@@ -26,19 +27,24 @@ if sys.version_info < (3, 7):
     console.print("- Use a Python version manager like pyenv to easily switch between multiple versions of Python.\n")
     sys.exit(1)
 
-def get_error_explanation(highlighted_text):
-    prompt = f"Explain this error message: {highlighted_text}"
+def get_error_explanation(error_message):
+    prompt = (f"Generate an explanation and solution for the following error message:\n\n{error_message}\n\n"
+              "Explanation:\nSolution:")
     response = openai.Completion.create(
-        model="text-davinci-003",
+        engine="text-davinci-003",
         prompt=prompt,
-        max_tokens=1024
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.7,
     )
-    return response.choices[0].text
+    response_text = response.choices[0].text.strip()
+    explanation, solution = re.split('Explanation:|Solution:', response_text)
+    return (explanation.strip(), solution.strip())
 
-args.text = "NameError: name 'foo' is not defined"
+error_message = "[bold red]Error:[/bold red] DBUG requires Python 3.7 or higher to run. Please update to a newer version of Python."
+explanation, solution = get_error_explanation(error_message)
+print("Explanation:", explanation)
+print("Solution:", solution)
 
-explanation = get_error_explanation(args.text)
-console.print(explanation)
 
-# This simply prints the highlighted text to the console.
-print("Highlighted text: " + args.text)
