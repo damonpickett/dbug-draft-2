@@ -28,8 +28,7 @@ if sys.version_info < (3, 7):
     sys.exit(1)
 
 def get_error_explanation(error_message):
-    prompt = (f"Generate an explanation and solution for the following error message:\n\n{error_message}\n\n"
-              "Explanation:\nSolution:")
+    prompt = (f'''Generate an explanation and solution for the following error message: `{error_message}`. Preface the explanation with "Explanation: " and the solution with "Solution: " and put Explanation and Solution on separate lines.''')
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=prompt,
@@ -39,12 +38,9 @@ def get_error_explanation(error_message):
         temperature=0.7,
     )
     response_text = response.choices[0].text.strip()
-    explanation, solution = re.split('Explanation:|Solution:', response_text)
-    return (explanation.strip(), solution.strip())
+    print(response_text)
+    # explanation, solution = re.split('Explanation:|Solution:', response_text)
+    # return (explanation.strip(), solution.strip())
 
-error_message = "[bold red]Error:[/bold red] DBUG requires Python 3.7 or higher to run. Please update to a newer version of Python."
-explanation, solution = get_error_explanation(error_message)
-print("Explanation:", explanation)
-print("Solution:", solution)
-
-
+error_message = args.text
+get_error_explanation(error_message)
