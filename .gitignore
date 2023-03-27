@@ -29,3 +29,5 @@ build/
 Thumbs.db
 
 notes.md
+steps-to-python-package.md
+dbug.py
