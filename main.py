@@ -3,16 +3,12 @@ import openai
 import argparse
 from dotenv import load_dotenv
 import os
+from . import generate_text
 
 
 # load env variable
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# Create CLI argument parser
-parser = argparse.ArgumentParser(description="Generate text using GPT-3")
-parser.add_argument("text", help="The text to generate a response for")
-args = parser.parse_args()
 
 # API Call
 def generate_text(text):
@@ -28,6 +24,13 @@ def generate_text(text):
     message = response.choices[0].text.strip()
     return message
 
-response = generate_text(args.text)
-print(response)
+# Create CLI argument parser, run generate_text function
+def main():
+    parser = argparse.ArgumentParser(description="Generate text using GPT-3")
+    parser.add_argument("text", help="The text to generate a response for")
+    args = parser.parse_args()
+    response = generate_text(args.text)
+    print(response)
+
+
 
