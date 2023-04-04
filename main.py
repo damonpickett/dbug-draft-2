@@ -3,7 +3,7 @@ import openai
 import argparse
 from dotenv import load_dotenv
 import os
-from . import generate_text
+# from . import generate_text
 
 
 # load env variable

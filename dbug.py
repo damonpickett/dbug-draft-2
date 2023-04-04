@@ -1,21 +1,26 @@
-import argparse
 import sys
 import openai
 from dotenv import load_dotenv
 import os
 from rich.console import Console
-import re
-
 
 load_dotenv()
 
+# Check if OPENAI_API_KEY is set in the environment
+if not os.getenv("OPENAI_API_KEY"):
+
+    # Prompt user for OPENAI_API_KEY value
+    openai_api_key = input("Please enter your OpenAI API key: ")
+
+    # Write value to .env file
+    with open(".env", "w") as f:
+        f.write(f"OPENAI_API_KEY={openai_api_key}")
+    
+    load_dotenv()
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# This creates a new ArgumentParser object and adds a positional argument called "text" that represents the highlighted text from the terminal.
-# The parse_args() method then reads the command-line arguments and returns a namespace object that contains the argument values.
-parser = argparse.ArgumentParser()
-parser.add_argument("text", help="the highlighted text from the terminal")
-args = parser.parse_args()
+error_message = input("Please paste your error code here: ")
 
 console = Console()
 
@@ -39,8 +44,5 @@ def get_error_explanation(error_message):
     )
     response_text = response.choices[0].text.strip()
     print(response_text)
-    # explanation, solution = re.split('Explanation:|Solution:', response_text)
-    # return (explanation.strip(), solution.strip())
 
-error_message = args.text
 get_error_explanation(error_message)
